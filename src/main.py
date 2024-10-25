@@ -19,6 +19,7 @@ MAX_CONCURRENT_DOWNLOADS = 4
 
 
 def load_credentials() -> tuple:
+    """Load GitHub credentials from the .git-credentials file."""
     with open(os.path.expanduser('~/.git-credentials')) as f:
         credentials = f.read().strip()
     username = credentials.split('/')[2].split(':')[0]
@@ -27,6 +28,7 @@ def load_credentials() -> tuple:
 
 
 def load_org_names() -> list:
+    """Load organization names from the orgs.toml file."""
     with open(os.path.join(PROJECT_DIR, '../orgs.toml'), 'r') as toml_file:
         data = toml.load(toml_file)
         return data.get('orgs', [])
@@ -35,6 +37,7 @@ def load_org_names() -> list:
 async def get_repositories(
     session: aiohttp.ClientSession, org_name: str
 ) -> list:
+    """Fetch repositories for a given organization from GitHub API."""
     page = 1
     repos = []
 
@@ -47,7 +50,9 @@ async def get_repositories(
                 error_message = (await response.json()).get(
                     'message', 'Unknown error'
                 )
-                logger.error(f'❌ Ошибка: {error_message}')
+                logger.error(
+                    f'❌ Error fetching repos for {org_name}: {error_message}'
+                )
                 return []
 
             clone_urls = [repo['clone_url'] for repo in await response.json()]
@@ -65,51 +70,56 @@ async def get_repositories(
     return repos
 
 
+def submodule_exists(repo_name: str, org_dir: str) -> bool:
+    """Check if a submodule already exists in the .gitmodules file."""
+    if os.path.exists(os.path.join(org_dir, '.gitmodules')):
+        with open(os.path.join(org_dir, '.gitmodules'), 'r') as f:
+            return f'submodule "{repo_name}"' in f.read()
+    return False
+
+
 def add_submodule(repo_url: str, org_name: str) -> None:
+    """Add a submodule to the repository."""
     repo_name = os.path.basename(repo_url).replace('.git', '')
     org_dir = os.path.join(REPO_DIR, org_name)
 
     os.makedirs(org_dir, exist_ok=True)
     os.chdir(org_dir)
 
-    if os.path.exists('.gitmodules'):
-        with open('.gitmodules', 'r') as f:
-            if f'submodule "{repo_name}"' in f.read():
-                logger.warning(
-                    f"⚠️ Подмодуль '{repo_name}' уже существует. Пропуск..."
-                )
-                return
+    if submodule_exists(repo_name, org_dir):
+        logger.warning(
+            f"⚠️ Submodule '{repo_name}' already exists. Skipping..."
+        )
+        return
 
     try:
         repo = Repo.init()
         repo.create_submodule(repo_name, repo_name, repo_url)
-        logger.info(f'✅ Добавлен подмодуль: {repo_url}')
+        logger.info(f'✅ Added submodule: {repo_url}')
 
         if os.path.isdir(repo_name):
-            logger.info(f"✅ Подмодуль '{repo_name}' успешно клонирован.")
+            logger.info(f"✅ Submodule '{repo_name}' successfully cloned.")
         else:
-            logger.error(
-                f"❌ Ошибка: Подмодуль '{repo_name}' не был клонирован."
-            )
+            logger.error(f"❌ Error: Submodule '{repo_name}' was not cloned.")
     except Exception as e:
-        logger.error(
-            f'❌ Ошибка при добавлении подмодуля: {repo_url} - {str(e)}'
-        )
+        logger.error(f'❌ Error adding submodule: {repo_url} - {str(e)}')
 
 
 async def process_organization(
     session: aiohttp.ClientSession, org_name: str
 ) -> None:
-    logger.info(f'🔍 Обработка организации: {org_name}')
+    """Process an organization by fetching its repositories and adding them as submodules."""
+    logger.info(f'🔍 Processing organization: {org_name}')
     repos = await get_repositories(session, org_name)
 
     if not repos:
-        logger.warning(f'⚠️ Нет репозиториев для организации: {org_name}')
+        logger.warning(f'⚠️ No repositories found for organization: {org_name}')
         return
 
     semaphore = asyncio.Semaphore(MAX_CONCURRENT_DOWNLOADS)
 
     async def limited_add_submodule(repo):
+        """Limit the number of concurrent submodule additions."""
         async with semaphore:
             await asyncio.to_thread(add_submodule, repo, org_name)
 
@@ -117,6 +127,7 @@ async def process_organization(
 
 
 async def main() -> None:
+    """Main entry point for the script."""
     global username, token
     username, token = load_credentials()
     org_names = load_org_names()
