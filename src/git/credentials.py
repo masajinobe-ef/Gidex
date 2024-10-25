@@ -2,7 +2,6 @@ import os
 
 
 def load_credentials() -> tuple:
-    """Load GitHub credentials from the .git-credentials file."""
     with open(os.path.expanduser('~/.git-credentials')) as f:
         credentials = f.read().strip()
     username = credentials.split('/')[2].split(':')[0]

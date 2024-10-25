@@ -1,11 +1,12 @@
 import os
 from git import Repo
-from logger import logger
-from config import REPO_DIR
+
+
+from .utils.logger import logger
+from .config import REPO_DIR
 
 
 def submodule_exists(repo_name: str, org_dir: str) -> bool:
-    """Check if a submodule already exists in the .gitmodules file."""
     if os.path.exists(os.path.join(org_dir, '.gitmodules')):
         with open(os.path.join(org_dir, '.gitmodules'), 'r') as f:
             return f'submodule "{repo_name}"' in f.read()
@@ -13,7 +14,6 @@ def submodule_exists(repo_name: str, org_dir: str) -> bool:
 
 
 def add_submodule(repo_url: str, org_name: str) -> None:
-    """Add a submodule to the repository."""
     repo_name = os.path.basename(repo_url).replace('.git', '')
     org_dir = os.path.join(REPO_DIR, org_name)
 

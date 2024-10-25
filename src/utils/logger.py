@@ -35,4 +35,3 @@ def setup_logger(
 
 
 setup_logger()
-

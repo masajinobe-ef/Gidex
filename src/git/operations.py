@@ -1,9 +1,11 @@
 import os
 import subprocess
 import shutil
-from colorama import init, Fore, Style
-from loguru import logger
-from config import BRANCH_NAME, SUBMODULES_DIR, GITMODULES_FILE
+
+from colorama import init, Fore, Style, Back
+
+from .utils.loguru import logger
+from .config import BRANCH_NAME, SUBMODULES_DIR, GITMODULES_FILE
 
 
 # Initialize colorama
@@ -11,35 +13,42 @@ init(autoreset=True)
 
 
 def show_help():
-    print(f'{Fore.BLUE}💻 Usage: python main.py [options]{Style.RESET_ALL}\n')
-    print(f'{Fore.YELLOW}Options:{Style.RESET_ALL}')
-    print(f'{Fore.BLUE}--- Submodules ---{Style.RESET_ALL}')
+    print(
+        f'{Back.WHITE}{Fore.BLUE}💻 Usage: python main.py [options]{
+            Style.RESET_ALL}\n'
+    )
+    print(f'{Back.WHITE}{Fore.YELLOW}Options:{Style.RESET_ALL}')
+    print(f'{Back.WHITE}{Fore.BLUE}--- Submodules ---{Style.RESET_ALL}')
     print('  -s, --sync             🔄 Sync submodules')
     print('  -c, --commit           📝 Commit changes in submodules')
     print('  -p, --push             🚀 Push changes in submodules')
     print('  -r, --remove ORG/REPO  ❌ Remove a specific submodule\n')
-    print(f'{Fore.BLUE}--- Main Project ---{Style.RESET_ALL}')
+    print()
+    print(f'{Back.WHITE}{Fore.BLUE}--- Main Project ---{Style.RESET_ALL}')
     print(
-        '  -m, --main-commit      💾 Commit changes in the main project only'
+        '  -mc, --main-commit      💾 Commit changes in the main project only'
     )
     print(
-        '  -p-main, --push-main    🚀 Push changes in the main project only\n'
+        '  -pm, --push-main        🚀 Push changes in the main project only\n'
     )
-    print(f'{Fore.BLUE}--- Danger Zone ---{Style.RESET_ALL}')
+    print()
+    print(f'{Back.WHITE}{Fore.BLUE}--- Danger Zone ---{Style.RESET_ALL}')
     print(
         '  -cm, --commit-all      🔥 Commit changes in both main project and submodules'
     )
     print(
         '  -a, --all-push         🔥 Push all changes (submodules and main project)\n'
     )
+    print()
     print(
-        f'{Fore.YELLOW}⚠️ Warning: Commands that modify submodules can potentially overwrite changes.{Style.RESET_ALL}'
+        f'{Back.YELLOW}⚠️ Warning: Commands that modify submodules can potentially overwrite changes.{
+            Style.RESET_ALL}'
     )
 
 
 def check_error(result):
     if result.returncode != 0:
-        logger.error('Failed to execute the previous command.')
+        logger.error('❌ Failed to execute the previous command.')
         exit(1)
 
 
@@ -135,7 +144,7 @@ def remove_submodule(org_repo):
     repo_path = os.path.join(SUBMODULES_DIR, org_repo)
     if not os.path.isdir(repo_path):
         logger.error(
-            f"Repository '{repo_path}' does not exist as a submodule."
+            f"❌ Repository '{repo_path}' does not exist as a submodule."
         )
         exit(1)
 
@@ -199,4 +208,3 @@ def push_all_changes():
 
 if __name__ == '__main__':
     show_help()
-
