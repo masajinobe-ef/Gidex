@@ -20,6 +20,18 @@ async def get_repositories(
             f'https://api.github.com/orgs/{org_name}/repos?per_page=100&page={page}',
             auth=BasicAuth(username, token),
         ) as response:
+            if response.status == 403:  # Check for rate limit exceeded
+                error_message = (await response.json()).get(
+                    'message', 'API rate limit exceeded'
+                )
+                logger.error(
+                    f'❌ Error fetching repos for {org_name}: {error_message}'
+                )
+                logger.warning(
+                    f'⚠️ Rate limit exceeded for organization: {org_name}. Please try again later.'
+                )
+                return []
+
             if response.status != 200:
                 error_message = (await response.json()).get(
                     'message', 'Unknown error'
@@ -63,3 +75,4 @@ async def process_organization(
             await asyncio.to_thread(add_submodule, repo, org_name)
 
     await asyncio.gather(*(limited_add_submodule(repo) for repo in repos))
+
