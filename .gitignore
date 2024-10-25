@@ -13,7 +13,7 @@ wheels/
 repos/*
 
 # Logs
-sync.log
+logs/*
 
 # uv
 uv.lock
