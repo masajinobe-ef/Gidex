@@ -14,3 +14,9 @@ $ cd gidex
 $ sudo chmod +x sync.sh
 $ ./sync.sh
 ```
+
+Use `orgs.toml` for edit organizations.
+
+## License
+
+Gidex is licensed under the GPL-3.0 License. You can view the full license text in the LICENSE file in the repository.
