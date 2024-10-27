@@ -14,10 +14,10 @@ def show_help():
     print(f'{Fore.YELLOW}Options:{Style.RESET_ALL}')
 
     print(f'{Fore.BLUE}--- Submodules ---{Style.RESET_ALL}')
-    print('  --init                 📁 Init submodules')
+    print('  -i, --init             📁 Init submodules')
     print('  -s, --sync             🔄 Sync submodules')
     print('  -c, --commit           📝 Commit changes in submodules')
-    print('  -p, --push             🚀 Push changes in submodules')
+    print('  -p, --push             🚀 Push changes in submodules\n')
 
     print(f'{Fore.BLUE}--- Main Project ---{Style.RESET_ALL}')
     print(

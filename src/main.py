@@ -90,7 +90,7 @@ async def main() -> None:
         elif option in ['-h', '--help']:
             show_help()
 
-        elif option in ['--init']:
+        elif option in ['-i', '--init']:
             await initialize()
 
         else:
