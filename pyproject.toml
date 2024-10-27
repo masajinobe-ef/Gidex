@@ -1,0 +1,29 @@
+[project]
+name = "Gitex"
+version = "0.1.0"
+description = "🧲 A tool for automatic sync of repos similar to Google Repo."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.10.10",
+    "colorama>=0.4.6",
+    "gitpython>=3.1.43",
+    "loguru>=0.7.2",
+    "toml>=0.10.2",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.7.1",
+]
+
+[tool.ruff]
+line-length = 79
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+
+[tool.ruff.lint]
+ignore = ["F403"]
