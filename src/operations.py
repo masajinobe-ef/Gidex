@@ -3,7 +3,7 @@ import subprocess
 import shutil
 from colorama import init, Fore, Style
 from logger import logger
-from config import BRANCH_NAME, SUBMODULES_DIR, GITMODULES_FILE
+from constants import BRANCH_NAME, SUBMODULES_DIR, GITMODULES_FILE
 
 init(autoreset=True)
 
@@ -18,8 +18,6 @@ def show_help():
     print('  -s, --sync             🔄 Sync submodules')
     print('  -c, --commit           📝 Commit changes in submodules')
     print('  -p, --push             🚀 Push changes in submodules')
-    print('  -r, --remove ORG/REPO  ❌ Remove a specific submodule')
-    print('  -ro, --remove-org ORG  ❌ Remove a organization folder\n')
 
     print(f'{Fore.BLUE}--- Main Project ---{Style.RESET_ALL}')
     print(
@@ -30,6 +28,8 @@ def show_help():
     )
 
     print(f'{Fore.BLUE}--- Danger Zone ---{Style.RESET_ALL}')
+    print('  -r, --remove ORG/REPO  ❌ Remove a specific submodule')
+    print('  -ro, --remove-org ORG  ❌ Remove a organization folder')
     print(
         '  -cm, --commit-all      🔥 Commit changes in both main project and submodules'
     )

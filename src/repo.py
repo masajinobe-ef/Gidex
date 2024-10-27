@@ -2,7 +2,7 @@ import aiohttp
 from aiohttp import BasicAuth
 import asyncio
 from logger import logger
-from config import MAX_CONCURRENT_DOWNLOADS
+from constants import MAX_CONCURRENT_DOWNLOADS
 from submodule import add_submodule
 from credentials import load_credentials
 
