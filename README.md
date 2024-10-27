@@ -2,12 +2,12 @@
 
 Gidex is a command-line tool designed for synchronizing GitHub repositories as submodules within a local repository. This is particularly useful for managing dependencies and collaborating across multiple projects within specified organizations.
 
-## Development Status
-Warning: Gidex is currently in the development stage and may contain bugs or incomplete features. Use this tool at your own risk, as it may lead to unexpected behavior or data loss. It is recommended to test in a safe environment before using it in production.
-
 <p align="center">
   <img width="100%" src="docs/img/help.png" alt="help"/>
 </p>
+
+## Development Status
+Warning: Gidex is currently in the development stage and may contain bugs or incomplete features. Use this tool at your own risk, as it may lead to unexpected behavior or data loss. It is recommended to test in a safe environment before using it in production.
 
 ## Installation
 
