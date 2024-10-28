@@ -21,10 +21,10 @@ def show_help():
 
     print(f'{Fore.BLUE}--- Main Project ---{Style.RESET_ALL}')
     print(
-        '  -mc, --main-commit      💾 Commit changes in the main project only'
+        '  -mc, --main-commit    💾 Commit changes in the main project only'
     )
     print(
-        '  -pm, --push-main        🚀 Push changes in the main project only\n'
+        '  -pm, --push-main      🚀 Push changes in the main project only\n'
     )
 
     print(f'{Fore.BLUE}--- Danger Zone ---{Style.RESET_ALL}')
